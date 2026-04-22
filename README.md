@@ -1,7 +1,7 @@
 # Phaseplottdrawer script
 This is a script that can numerically draw the phaseplot of any 2D system of differential equations. Was orgininally made as a way to test the solutions to the course TMA4165 at NTNU. 
 The script uses the scipy.integrate library for numrical analysis and the matplotlib library to plot the results. 
-
+  
 
 # Running the script
 For running this script, open the 'main.py' script and edit the system(x, y)-function. it is by default set to:
