@@ -1,0 +1,8 @@
+[project]
+name = "plotter"
+version = "0.1.0"
+dependencies = [
+    "numpy",
+    "matplotlib",
+    "scipy.integrate"
+]
