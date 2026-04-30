@@ -2,7 +2,7 @@ from plotter import plotter
 from diffEquations import diffEquations
 from sympy import symbols
 
-
+from sympy import sin #Import all 
 x, y, z = symbols('x y z')
 
 sys = diffEquations(

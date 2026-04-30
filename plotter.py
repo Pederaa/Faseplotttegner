@@ -3,7 +3,8 @@ import numpy as np
 from scipy.integrate import solve_ivp
 import math
 
-from sympy import lambdify
+from sympy import lambdify, ConditionSet
+from sympy.solvers import solve, solveset, nonlinsolve
 
 class plotter:
     def __init__(self) -> None:
@@ -15,8 +16,12 @@ class plotter:
 
         return x_range, y_range
 
-    def getZeros(self, system):
-        return None
+    def getZeros(self, system, symbols):
+        p = nonlinsolve(system.getList(), symbols)
+
+        if isinstance(p, ConditionSet):
+            print("ERROR: Unable to find eqv. points in the system.")
+        return p
     
     def draw(self, equations, symbols, type="arrows"):
         Ndim = equations.len()
@@ -37,8 +42,10 @@ class plotter:
         
 
     def draw2D(self, equations, symbols, type="arrows"):
-        zeroes = self.getZeros(equations)
+        zeroes = self.getZeros(equations, symbols)
         x_range, y_range = self.getRanges(zeroes)
+
+        print(zeroes)
 
         n = 40
         xGrid, yGrid = np.meshgrid(np.linspace(x_range[0], x_range[1], n), 
@@ -55,6 +62,10 @@ class plotter:
 
         # Draw the graph
         fig, ax = plt.subplots()
+
+        x_zeroes = [float(p[0]) for p in zeroes]
+        y_zeroes = [float(p[1]) for p in zeroes]
+        plt.scatter(x_zeroes, y_zeroes, marker='o', c="Red", s=50)
 
         match type:
             case "arrows":

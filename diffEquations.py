@@ -3,11 +3,17 @@ class diffEquations:
         self.dx = dx
         self.dy = dy
         self.dz = dz
-    
-    def len(self):
+
         if self.dy == None:
-            return 1
+            self.rank = 1
         elif self.dz == None:
-            return 2
+            self.rank = 2
         else:
-            return 3
+            self.rank = 3
+        
+    def len(self):
+        return self.rank
+    
+    def getList(self):
+        l = [self.dx, self.dy, self.dz]
+        return l[0:self.rank]

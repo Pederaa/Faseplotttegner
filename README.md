@@ -3,6 +3,13 @@ This is a script that can numerically draw the phaseplot of any 2D system of dif
 
 The script relies on the SymPy library, and requires the input to follow this format. It also uses the scipy.integrate and numpy libraries for numrical analysis and the matplotlib library to plot the results. 
 
+The nonlinsolve-function has some limitations on which systems it can algebraicly find the eqv. points for. Some limiations:
+1. *Transcendental mixtures*. When algebraic and transcendental (trig, exp, log) terms are mixed in a non-separable way: "x + sin(x) - 1".
+2. *Coupled trig equations*. When two trig equations share variables in a way that can't be reduced. 
+3. *Systems with special functions*. [Bessel functions](https://en.wikipedia.org/wiki/Bessel_function), [the Gamma function](https://en.wikipedia.org/wiki/Gamma_function), [Lambert W](https://en.wikipedia.org/wiki/Lambert_W_function), etc.
+4. *High-degree polynomial systems*. Generally works up to degree 4 (has closed-form solutions), but degree 5+ often fails due to the [Abel–Ruffini theorem](https://en.wikipedia.org/wiki/Abel%E2%80%93Ruffini_theorem).
+
+The script prints an error when it is unable to find eqv. points. 
 
 # Running the script
 For running this script, open the 'main.py' script and edit the diffEquations-initialization. It is by default set to:
@@ -18,7 +25,8 @@ Replace 'dx = ...' and 'dy = ...' with your equations of state, and run the 'mai
 
 
 # Future ideas:
-- Make a script that calculates the eqv. points of the system and scales the graph automatically to include them. the case of infinite eqv. points will have to be dealt with. 
+- Make a script that scales the graph automatically to include zeroes. 
+- What to do with infinite eqv. points. 
 - Make the script able to classify eqv. points. Should be simple for non-marginaly stable points, linearization should be sufficient according to the [Hartman-Grobman Theorem](https://en.wikipedia.org/wiki/Hartman%E2%80%93Grobman_theorem). For marginally stable ones, it is more difficult. 
 - Make the script into a pythonpackage that can be easily run by others. 
 - Expand the code to accept 3D systems
