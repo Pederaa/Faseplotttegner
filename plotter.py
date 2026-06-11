@@ -3,25 +3,91 @@ import numpy as np
 from scipy.integrate import solve_ivp
 import math
 
-from sympy import lambdify, ConditionSet
+from sympy import lambdify, FiniteSet, Interval, ProductSet, ImageSet, ComplexRegion, ConditionSet, Naturals, Naturals0, Integers, Reals, Complexes, EmptySet, ConditionSet
 from sympy.solvers import solve, solveset, nonlinsolve
+from sympy.core.containers import Tuple
+from sympy.core.numbers import Number
+import sympy
 
 class plotter:
     def __init__(self) -> None:
         pass
 
     def getRanges(self, zeroes):
-        x_range = [-3, 3]
-        y_range = [-3, 3]
+        x_range = [-10, 10]
+        y_range = [-10, 10]
 
         return x_range, y_range
 
     def getZeros(self, system, symbols):
         p = nonlinsolve(system.getList(), symbols)
+        
+        zeroes = []
+        if isinstance(p, FiniteSet):
+            for s in p:
+                zeroes.extend(self.iterateZero(s))
+        
+        else:
+            zeroes.extend(self.iterateZero(p))
+        
+        return zeroes
+    
+    def iterateZero(self, s):
+        x = self.extractPointFromSet(s[0])
+        y = self.extractPointFromSet(s[1])
 
-        if isinstance(p, ConditionSet):
-            print("ERROR: Unable to find eqv. points in the system.")
-        return p
+        zeroes = []
+        for i in x:
+            for j in y:
+                zeroes.append((i, j))
+        return zeroes
+
+
+    def extractPointFromSet(self, setToExtract):
+        print(type(setToExtract))
+
+        if isinstance(setToExtract, int) or isinstance(setToExtract, float) or isinstance(setToExtract, Number):
+            return [setToExtract]
+        
+        if isinstance(setToExtract, ConditionSet):
+            raise ValueError("Unhandled type of zeroes: ConditionSet", setToExtract)
+
+        elif isinstance(setToExtract, FiniteSet):
+            raise ValueError("Unhandled type of zeroes: FiniteSet", p)
+        
+        elif isinstance(setToExtract, Interval):
+            raise ValueError("Unhandled type of zeroes: Interval", setToExtract)
+        
+        elif isinstance(setToExtract, ProductSet):
+            raise ValueError("Unhandled type of zeroes: ProductSet", setToExtract)
+        
+        elif isinstance(setToExtract, ImageSet):
+            values = []
+            for i in range(-2, 3):
+                values.append(setToExtract.lamda(i))
+            return values
+        
+        elif isinstance(setToExtract, ComplexRegion):
+            raise ValueError("Unhandled type of zeroes: ComplexRegion", setToExtract)
+        
+        # elif isinstance(s, Naturals):
+        #     raise ValueError("Unhandled type of zeroes: Naturals", s)
+        
+        # elif isinstance(s, Naturals0):
+        #     raise ValueError("Unhandled type of zeroes: Naturals0", s)
+        
+        # elif isinstance(s, Reals):
+        #     raise ValueError("Unhandled type of zeroes: Reals", s)
+        
+        # elif isinstance(s, Complexes):
+        #     raise ValueError("Unhandled type of zeroes: Complexes", s)
+        
+        # elif isinstance(s, EmptySet):
+        #     pass 
+
+        else:
+            raise ValueError("Unidentified type of zeroes", setToExtract)        
+    
     
     def draw(self, equations, symbols, type="arrows"):
         Ndim = equations.len()
