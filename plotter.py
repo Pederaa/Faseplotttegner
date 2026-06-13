@@ -14,10 +14,51 @@ class plotter:
         pass
 
     def getRanges(self, zeroes):
-        x_range = [-10, 10]
-        y_range = [-10, 10]
+        if len(zeroes) == 0:
+            x_range = [-10, 10]
+            y_range = [-10, 10]
+            return x_range, y_range
+        
+        elif len(zeroes) == 1:
+            x_range = [-10, 10]
+            y_range = [-10, 10]
+            return x_range, y_range
+        
+        x_range = [0.0, 0.0]
+        y_range = [0.0, 0.0]
+
+        for zero in zeroes:
+            x = zero[0]
+            if x < x_range[0]:
+                x_range[0] = x
+            elif x > x_range[1]:
+                x_range[1] = x
+            
+            y = zero[1]
+            if y < y_range[0]:
+                y_range[0] = y
+            elif y > y_range[1]:
+                y_range[1] = y
+        
+        x_width = abs(x_range[1] - x_range[0])
+        y_width = abs(y_range[1] - y_range[0])
+
+        if x_width > y_width:
+            y_width = x_width
+            y_range[0] -= (x_width - y_width)/2
+            y_range[1] += (x_width - y_width)/2
+        else:
+            x_width = y_width
+            x_range[0] -= (y_width - x_width)/2
+            x_range[1] += (y_width - x_width)/2
+        
+        x_range[0] = float(x_range[0] - x_width*0.2)
+        x_range[1] = float(x_range[1] + x_width*0.2)
+        y_range[0] = float(y_range[0] - y_width*0.2)
+        y_range[1] = float(y_range[1] + y_width*0.2)
 
         return x_range, y_range
+       
 
     def getZeros(self, system, symbols):
         p = nonlinsolve(system.getList(), symbols)
@@ -44,8 +85,6 @@ class plotter:
 
 
     def extractPointFromSet(self, setToExtract):
-        print(type(setToExtract))
-
         if isinstance(setToExtract, int) or isinstance(setToExtract, float) or isinstance(setToExtract, Number):
             return [setToExtract]
         
@@ -89,16 +128,16 @@ class plotter:
             raise ValueError("Unidentified type of zeroes", setToExtract)        
     
     
-    def draw(self, equations, symbols, type="arrows"):
+    def draw(self, equations, symbols, linetype="arrows"):
         Ndim = equations.len()
         if Ndim != len(symbols):
             raise ValueError(f"Number of equations does not match symbols: {Ndim} != {len(symbols)}")
         
         if Ndim == 1:
-            pass
+             print("One dimensions is work in progress")
 
         elif Ndim == 2:
-            self.draw2D(equations, symbols, type=type)
+            self.draw2D(equations, symbols, linetype=linetype)
         
         elif Ndim == 3:
             print("Three dimensions is work in progress")
@@ -107,19 +146,18 @@ class plotter:
             raise ValueError(f"Cannot visualize {Ndim} dimensions")
         
 
-    def draw2D(self, equations, symbols, type="arrows"):
+    def draw2D(self, equations, symbols, linetype="arrows"):
         zeroes = self.getZeros(equations, symbols)
         x_range, y_range = self.getRanges(zeroes)
 
-        print(zeroes)
-
-        n = 40
+        n = 20
         xGrid, yGrid = np.meshgrid(np.linspace(x_range[0], x_range[1], n), 
                             np.linspace(y_range[0], y_range[1], n)
                     )
-
+        
         f = lambdify((symbols[0], symbols[1]), equations.dx, 'numpy')
         g = lambdify((symbols[0], symbols[1]), equations.dy, 'numpy')
+        
         dx = f(xGrid, yGrid)
         dy = g(xGrid, yGrid)
 
@@ -133,9 +171,9 @@ class plotter:
         y_zeroes = [float(p[1]) for p in zeroes]
         plt.scatter(x_zeroes, y_zeroes, marker='o', c="Red", s=50)
 
-        match type:
+        match linetype:
             case "arrows":
-                q = ax.quiver(xGrid, yGrid, dx, dy, magnitude, pivot='mid', scale_units='xy', scale=2*20/(x_range[1]-x_range[0]), cmap='inferno')
+                q = ax.quiver(xGrid, yGrid, dx, dy, magnitude, pivot='mid', scale_units='xy', scale=20/(x_range[1]-x_range[0]), cmap='inferno')
                 plt.colorbar(q)
 
             case "lines":

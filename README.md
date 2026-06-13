@@ -26,12 +26,14 @@ Replace 'dx = ...' and 'dy = ...' with your equations of state, and run the 'mai
 
 # Future ideas:
 - Make a script that scales the graph automatically to include zeroes. 
-- Make the eqv.-points scale with the figure. 
+- Find a way to normalize the arrows, even with different x-y-ranges. 
 - find out what to do with intervals and regions of eqv. points. 
 - FInd out how to handle the other types of eqv. points, especially 
+- Make a high-lewel structure of the project. Make a config-file and necessarry kwargs
 - Make the script able to classify eqv. points. Should be simple for non-marginaly stable points, linearization should be sufficient according to the [Hartman-Grobman Theorem](https://en.wikipedia.org/wiki/Hartman%E2%80%93Grobman_theorem). For marginally stable ones, it is more difficult. 
 - Make the script into a pythonpackage that can be easily run by others. 
 - Add a requriements-file that automatically installs dependencies
 - Expand the code to accept 3D systems
 - Expand the code to accept 1D systems
 - Make animations
+- Make the system able to plot mulitple systems at once
