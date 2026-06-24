@@ -44,18 +44,22 @@ class plotter:
         y_width = abs(y_range[1] - y_range[0])
 
         if x_width > y_width:
-            y_width = x_width
             y_range[0] -= (x_width - y_width)/2
             y_range[1] += (x_width - y_width)/2
+            y_width = x_width
         else:
-            x_width = y_width
             x_range[0] -= (y_width - x_width)/2
             x_range[1] += (y_width - x_width)/2
-        
-        x_range[0] = float(x_range[0] - x_width*0.2)
-        x_range[1] = float(x_range[1] + x_width*0.2)
-        y_range[0] = float(y_range[0] - y_width*0.2)
-        y_range[1] = float(y_range[1] + y_width*0.2)
+            x_width = y_width
+
+        x_range[0] = float(x_range[0])
+        x_range[1] = float(x_range[1])
+        y_range[0] = float(y_range[0])
+        y_range[1] = float(y_range[1])
+
+        x_width = abs(x_range[1] - x_range[0])
+        y_width = abs(y_range[1] - y_range[0])
+        print(x_width, y_width)
 
         return x_range, y_range
        
@@ -92,7 +96,7 @@ class plotter:
             raise ValueError("Unhandled type of zeroes: ConditionSet", setToExtract)
 
         elif isinstance(setToExtract, FiniteSet):
-            raise ValueError("Unhandled type of zeroes: FiniteSet", p)
+            raise ValueError("Unhandled type of zeroes: FiniteSet", setToExtract)
         
         elif isinstance(setToExtract, Interval):
             raise ValueError("Unhandled type of zeroes: Interval", setToExtract)
@@ -173,7 +177,7 @@ class plotter:
 
         match linetype:
             case "arrows":
-                q = ax.quiver(xGrid, yGrid, dx, dy, magnitude, pivot='mid', scale_units='xy', scale=20/(x_range[1]-x_range[0]), cmap='inferno')
+                q = ax.quiver(xGrid, yGrid, dx, dy, magnitude, pivot='mid', scale_units='xy', scale=40/(x_range[1]-x_range[0]), cmap='inferno')
                 plt.colorbar(q)
 
             case "lines":
