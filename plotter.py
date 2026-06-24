@@ -59,7 +59,6 @@ class plotter:
 
         x_width = abs(x_range[1] - x_range[0])
         y_width = abs(y_range[1] - y_range[0])
-        print(x_width, y_width)
 
         return x_range, y_range
        
@@ -78,6 +77,9 @@ class plotter:
         return zeroes
     
     def iterateZero(self, s):
+        if s is EmptySet:
+            return []
+        
         x = self.extractPointFromSet(s[0])
         y = self.extractPointFromSet(s[1])
 
@@ -125,8 +127,8 @@ class plotter:
         # elif isinstance(s, Complexes):
         #     raise ValueError("Unhandled type of zeroes: Complexes", s)
         
-        # elif isinstance(s, EmptySet):
-        #     pass 
+        elif isinstance(setToExtract, EmptySet):
+            pass 
 
         else:
             raise ValueError("Unidentified type of zeroes", setToExtract)        
