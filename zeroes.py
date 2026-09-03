@@ -1,5 +1,10 @@
 from typing import Iterable
 from sympy import lambdify, FiniteSet, Interval, ProductSet, ImageSet, ComplexRegion, ConditionSet, Naturals, Naturals0, Integers, Reals, Complexes, EmptySet, ConditionSet
+
+# Imports types of expressions that appear. TODO: Find a better way to check for these
+from sympy.core.numbers import Zero, Rational
+from sympy.core.mul import Mul
+
 from sympy.solvers import solve, solveset, nonlinsolve
 from scipy.integrate import solve_ivp
 
@@ -45,7 +50,8 @@ class zeroes(list):
 
 
     def extractPointFromSet(self, setToExtract):
-        if isinstance(setToExtract, int) or isinstance(setToExtract, float) or isinstance(setToExtract, Number):
+        print(f"{setToExtract}: {type(setToExtract)}")
+        if isinstance(setToExtract, int) or isinstance(setToExtract, float) or isinstance(setToExtract, Zero) or isinstance(setToExtract, Rational) or isinstance(setToExtract, Mul):#  or isinstance(setToExtract, Number):
             return [setToExtract]
         
         if isinstance(setToExtract, ConditionSet):
