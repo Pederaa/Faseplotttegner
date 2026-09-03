@@ -10,11 +10,21 @@ sys1 = diffEquations(
     dy = x*(x+1)
 )
 
-sys2 = diffEquations(
-    dx = sin(x),
-    dy = y-1
+rabbit_fox = diffEquations(
+    dx = x*(63 - 5*y),
+    dy = -y*(457 - 6*x)
 )
+
+a = 4
+b = 1
+c = 1
+sys2 = diffEquations(
+    dx = -a*x - y**2,
+    dy = b*x*y + c*y
+)
+
 
 if __name__ == "__main__":
     pl = plotter()
-    pl.draw(sys2, [x, y])
+    # pl.draw(sys2, [x, y], x_range=[-0.75, -1.25], y_range=[1.75, 2.75])
+    pl.draw(sys2, [x, y], x_range=[-5, 5], y_range=[-5, 5])

@@ -10,6 +10,8 @@ import sympy
 
 from zeroes import zeroes
 
+import numpy as np
+
 class plotter:
     def __init__(self) -> None:
         pass
@@ -64,7 +66,7 @@ class plotter:
         return x_range, y_range      
     
     
-    def draw(self, equations, symbols, linetype="arrows"):
+    def draw(self, equations, symbols, linetype="arrows", x_range=None, y_range=None):
         Ndim = equations.len()
         if Ndim != len(symbols):
             raise ValueError(f"Number of equations does not match symbols: {Ndim} != {len(symbols)}")
@@ -73,7 +75,7 @@ class plotter:
              print("One dimensions is work in progress")
 
         elif Ndim == 2:
-            self.draw2D(equations, symbols, linetype=linetype)
+            self.draw2D(equations, symbols, linetype=linetype, x_range=x_range, y_range=y_range)
         
         elif Ndim == 3:
             print("Three dimensions is work in progress")
@@ -82,9 +84,15 @@ class plotter:
             raise ValueError(f"Cannot visualize {Ndim} dimensions")
         
 
-    def draw2D(self, equations, symbols, linetype="arrows"):
-        zeroes = getZeros(equations, symbols)
-        x_range, y_range = self.getRanges(zeroes)
+    def draw2D(self, equations, symbols, linetype="arrows", x_range=None, y_range=None):
+        zeros = zeroes() 
+        z = zeros.getZeros(equations, symbols)
+
+        x_range_from_zeros, y_range_frome_zeros = self.getRanges(z)
+        if x_range == None:
+            x_range = x_range_from_zeros
+        if y_range == None:
+            y_range = y_range_frome_zeros
 
         n = 20
         xGrid, yGrid = np.meshgrid(np.linspace(x_range[0], x_range[1], n), 
@@ -97,14 +105,20 @@ class plotter:
         dx = f(xGrid, yGrid)
         dy = g(xGrid, yGrid)
 
+        theta = np.atan(dy/dx)
+        length = 1
+
         magnitude = np.sqrt(dx**2 + dy**2)
-        dx, dy = dx/magnitude, dy/magnitude
+        dx = np.cos(theta)*length
+        dy = np.sin(theta)*length
+
+        # dx, dy = dx/magnitude, dy/magnitude
 
         # Draw the graph
         fig, ax = plt.subplots()
 
-        x_zeroes = [float(p[0]) for p in zeroes]
-        y_zeroes = [float(p[1]) for p in zeroes]
+        x_zeroes = [float(p[0]) for p in z]
+        y_zeroes = [float(p[1]) for p in z]
         plt.scatter(x_zeroes, y_zeroes, marker='o', c="Red", s=50)
 
         match linetype:
